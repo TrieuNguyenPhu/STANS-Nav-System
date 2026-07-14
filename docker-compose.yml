@@ -1,0 +1,17 @@
+# Local / single-server production compose for STANS
+services:
+  stans-app:
+    build: .
+    image: stans-app:latest
+    container_name: stans-app
+    restart: always
+    ports:
+      # Bind to localhost when host Nginx terminates TLS (recommended)
+      - "127.0.0.1:8080:80"
+      # For direct access without host proxy, use: "8080:80"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
